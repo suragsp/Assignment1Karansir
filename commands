@@ -1,0 +1,32 @@
+ gcloud artifacts repositories create dbapp 
+    --project=winter-cab-388500 
+    --repository-format=docker 
+    --location=us-central1 
+    --description="dbapp repository"
+
+#  gcloud artifacts repositories create frontend
+#     --project=winter-cab-388500
+#     --repository-format=docker
+#     --location=us-central1
+#     --description="frontend repository"
+
+gcloud builds submit
+  --tag us-central1-docker.pkg.dev/winter-cab-388500/dbapp/backend .
+
+gcloud builds submit
+  --tag us-central1-docker.pkg.dev/winter-cab-388500/dbapp/frontend .
+
+ gcloud container clusters create  app --zone us-central1-a --num-nodes 2 --machine-type e2-medium --disk-size 10GB
+
+ kubectl get services
+ kubectl get deployments
+ kubectl delete deployments dbapp
+ kubectl delete deployments frontend
+
+ kubectl create secret generic db-credentials
+  --from-literal=DB_HOST=34.135.203.230
+  --from-literal=DB_NAME=myappdb
+  --from-literal=DB_USER=postgres
+  --from-literal=DB_PASSWORD=admin123
+
+
